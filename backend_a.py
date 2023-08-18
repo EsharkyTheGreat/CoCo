@@ -38,7 +38,7 @@ def listAllQuestions() -> []:
 def listAllUsers(sort=False) -> []:
     users = []
     for user in USERS:
-        users.append({"user": user, "questions": listUserStats(user)})
+        users.append({"username": user, "questions": listUserStats(user)})
     if sort:
         users.sort(key=lambda x: len(x["questions"]), reverse=True)
     return users
@@ -55,16 +55,17 @@ def checkInviteCode(userName: str, password: str, inviteCode: int) -> int:
     if inviteCode != INVITE_CODE:
         return 0
     
+    if userName in USERS:
+        return 1
+    
     INVITE_CODE += 1
 
     USERS[userName] = {
-        "username": userName,
+
         "password": password,
         "questions": set()
     }
-    
-    return INVITE_CODE
-        
 
+    return INVITE_CODE
 
 
