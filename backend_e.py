@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import jwt
+import backend_a as aadeesh
 
 PRIVATE_KEY = "esharkyisthecoolestherointhiswholeworld"
 
@@ -26,6 +27,7 @@ def add_question():
 
     question = data.get("question")
     # Add Question to Database
+    aadeesh.addQuestion(user, question)
     if question is None:
         return jsonify({"status": "error", "message": "no question"})
     return jsonify({"status": "ok"})
@@ -40,7 +42,8 @@ def list_questions():
         return jsonify({"status": "error", "message": "invalid token"})
 
     # Get Questions from Database
-    return jsonify({"status": "ok", "questions": []})
+    questions = aadeesh.listAllQuestions()
+    return jsonify({"status": "ok", "questions": questions})
 
 @app.route("/mark", methods=["POST"])
 def mark_question():
@@ -51,10 +54,11 @@ def mark_question():
     if user is None:
         return jsonify({"status": "error", "message": "invalid token"})
     data = request.get_json()
-    question_id = data.get("question")
-    if question_id is None:
+    question = data.get("question")
+    if question is None:
         return jsonify({"status": "error", "message": "no question_id"})
     # Mark Question in Database
+    aadeesh.addQuestion(user, question)
     return jsonify({"status": "ok"})
 
 @app.route("/leaderboard")
@@ -67,8 +71,8 @@ def leaderboard():
         return jsonify({"status": "error", "message": "invalid token"})
 
     # Get Leaderboard from Database
-
-    return jsonify({"status": "ok", "leaderboard": []})
+    leaderboard = aadeesh.listAllUsers(sort=True)
+    return jsonify({"status": "ok", "leaderboard": leaderboard})
 
 @app.route("/register")
 def register():
@@ -76,13 +80,13 @@ def register():
     username = data.get("username")
     password = data.get("password")
     invite = data.get("invite")
-    # Check Invite
-    #
     if username is None or password is None:
         return jsonify({"status": "error", "message": "no username or password"})
-    # Add User to Database
-    #
-    return jsonify({"status": "ok"})
+    # Check Invite Add User to Database
+    new_invite = aadeesh.checkInviteCode(username,password,invite)
+    if new_invite == 0:
+        return jsonify({"status": "error", "message": "invalid invite"})
+    return jsonify({"status": "ok", "invite": new_invite})
 
 @app.route("/login")
 def login():
