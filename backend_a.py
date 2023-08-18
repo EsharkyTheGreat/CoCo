@@ -61,11 +61,19 @@ def checkInviteCode(userName: str, password: str, inviteCode: int) -> int:
     INVITE_CODE += 1
 
     USERS[userName] = {
-
+        "username": userName,
         "password": password,
         "questions": set()
     }
 
     return INVITE_CODE
 
+def login(userName: str, password: str) -> int:
+    if userName not in USERS:
+        return 0
+    
+    if USERS[userName]['password'] != password:
+        return 0
+    
+    return 1
 
