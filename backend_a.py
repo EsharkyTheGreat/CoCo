@@ -38,7 +38,7 @@ def listAllQuestions() -> []:
 def listAllUsers(sort=False) -> []:
     users = []
     for user in USERS:
-        users.append({"username": user["username"], "questions": listUserStats(user)})
+        users.append({"username": USERS[user]['username'], "questions": listUserStats(user)})
     if sort:
         users.sort(key=lambda x: len(x["questions"]), reverse=True)
     return users
