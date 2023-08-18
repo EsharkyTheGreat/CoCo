@@ -6,8 +6,8 @@ PRIVATE_KEY = "esharkyisthecoolestherointhiswholeworld"
 
 def validate_token(token):
     try:
-        return jwt.decode(token, PRIVATE_KEY)
-    except:
+        return jwt.decode(token, PRIVATE_KEY, algorithms=["HS256"])['username']
+    except Exception as e:
         return None
 
 app = Flask("coco")
@@ -95,10 +95,12 @@ def login():
     data =request.get_json()
     username = data.get("username")
     password = data.get("password")
-    # Check Password
-    #
     if username is None or password is None:
         return jsonify({"status": "error", "message": "no username or password"})
+    # Check Password
+    res = aadeesh.login(username,password) 
+    if res == 0:
+        return jsonify({"status": "error", "message": "invalid username or password"})
     # Generate Token
-    token = jwt.encode({"username": username}, PRIVATE_KEY)
+    token = jwt.encode({"username": username}, PRIVATE_KEY, algorithm="HS256")
     return jsonify({"status": "ok", "token": token})
