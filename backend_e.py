@@ -90,7 +90,7 @@ def register():
         return jsonify({"status": "error", "message": "username already exists"})
     return jsonify({"status": "ok", "invite": new_invite})
 
-@app.route("/login")
+@app.route("/login",methods=["POST"])
 def login():
     data =request.get_json()
     username = data.get("username")
