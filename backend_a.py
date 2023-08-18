@@ -1,14 +1,13 @@
 USERS = {}
 QUESTIONS = {}
+INVITE_CODE = 1111
 
-def addQuestion(userName, questionLink):
+def addQuestion(userName: str, questionLink: str) -> int:
     if questionLink not in QUESTIONS:
         QUESTIONS[questionLink] = set()
     QUESTIONS[questionLink].add(userName)
 
-    if userName not in USERS:
-        USERS[userName] = set()
-        USERS[userName].add(questionLink)
+    USERS[userName]['questions'].add(questionLink)
 
     return 1
 
@@ -26,8 +25,8 @@ def listUserStats(userName) -> []:
         return []
     
     questions = []
-    for question in USERS[userName]:
-        questions.append(question)
+    for user in USERS[userName]:
+        questions.append(user["questions"])
     return questions
 
 def listAllQuestions() -> []:
@@ -39,7 +38,7 @@ def listAllQuestions() -> []:
 def listAllUsers(sort=False) -> []:
     users = []
     for user in USERS:
-        users.append({"user": user, "questions": listUserStats(user)})
+        users.append({"username": user, "questions": listUserStats(user)})
     if sort:
         users.sort(key=lambda x: len(x["questions"]), reverse=True)
     return users
@@ -51,8 +50,22 @@ def listQuestionsAccordingToMostSolved() -> []:
     questions.sort(key=lambda x: len(x["users"]), reverse=True)
     return questions
 
-        
-        
+def checkInviteCode(userName: str, password: str, inviteCode: int) -> int:
+    global INVITE_CODE
+    if inviteCode != INVITE_CODE:
+        return 0
+    
+    if userName in USERS:
+        return 1
+    
+    INVITE_CODE += 1
 
+    USERS[userName] = {
+
+        "password": password,
+        "questions": set()
+    }
+
+    return INVITE_CODE
 
 
