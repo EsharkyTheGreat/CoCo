@@ -74,7 +74,7 @@ def leaderboard():
     leaderboard = aadeesh.listAllUsers(sort=True)
     return jsonify({"status": "ok", "leaderboard": leaderboard})
 
-@app.route("/register")
+@app.route("/register",methods=["POST"])
 def register():
     data = request.get_json()
     username = data.get("username")
@@ -86,6 +86,8 @@ def register():
     new_invite = aadeesh.checkInviteCode(username,password,invite)
     if new_invite == 0:
         return jsonify({"status": "error", "message": "invalid invite"})
+    if new_invite == 1:
+        return jsonify({"status": "error", "message": "username already exists"})
     return jsonify({"status": "ok", "invite": new_invite})
 
 @app.route("/login")
