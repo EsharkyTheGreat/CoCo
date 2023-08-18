@@ -83,8 +83,10 @@ def register():
     if username is None or password is None:
         return jsonify({"status": "error", "message": "no username or password"})
     # Check Invite Add User to Database
-    # aadeesh.
-    return jsonify({"status": "ok"})
+    new_invite = aadeesh.checkInviteCode(username,password,invite)
+    if new_invite == 0:
+        return jsonify({"status": "error", "message": "invalid invite"})
+    return jsonify({"status": "ok", "invite": new_invite})
 
 @app.route("/login")
 def login():
