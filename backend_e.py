@@ -196,5 +196,5 @@ def login():
     if res == 0:
         return jsonify({"status": "error", "message": "invalid username or password"})
     # Generate Token
-    token = jwt.encode({"username": username,"exp":datetime.datetime.utcnow()+datetime.timedelta(hours=24)}, PRIVATE_KEY, algorithm="HS256")
+    token = jwt.encode({"username": username,"exp":datetime.datetime.utcnow()+datetime.timedelta(hours=24*7)}, PRIVATE_KEY, algorithm="HS256")
     return jsonify({"status": "success", "token": token})
